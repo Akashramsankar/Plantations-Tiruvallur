@@ -1,0 +1,141 @@
+{% extends "post_login_HQ.html" %}
+{% block content %}
+<form id="new-intent" action="/add_plantation/{{ user._id }}" method="post">
+    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-around; margin-top: 10px">
+        <div>
+            <h3>Add Plantation Form</h3>
+        </div>
+
+        <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center">
+            <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                 <label for="typeOfPlantation">Type Of Plantation</label>
+                <label for="plantationDate">Plantation Date</label>
+                <label for="typeOfCrop">Type of Sapling</label>
+                <label for="Blocks">Block</label>
+                <label for="panchayat">Panchayat</label>
+                <label for="habitation">Habitations</label>
+                <label for="overseer">Overseer</label>
+                <label for="plotNo">Plot Number</label>
+                <label for="hectre">Hectre</label>
+                <label for="workName">Work Name</label>
+                <label for="totalPits">Total Pits</label>
+                <label for="costOfCrops">Estimate Cost</label>
+                <label for="totalSanctionedPlants">Total Sanctioned Plants</label>
+
+            </div>
+            <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                 <select style="flex: 4" class="form-control" id="typeOfPlantation" name="typeOfPlantation" >
+                    {% set nature = ['Avenue Plantation', 'Mass Tree Plantation'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                </select>
+                <input type="date" value="plantationDate" id="plantationDate" name="plantationDate">
+                <select style="flex: 4" class="form-control" id="typeOfCrop" name="typeOfCrop" >
+                    {% set nature = ['Neem', 'Nochi', 'Puliyan', 'Pungan', 'Vembu', 'Manjankondrai', 'Katuva', 'Teak', 'Kodukapuli', 'Poovarasan', 'Badam', 'Vengai', 'Athi'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                </select>
+                <select style="flex: 4" class="form-control" id="Blocks" name="Blocks" onclick="populatePanchayat()">
+                    {% set nature = ['Tiruvallur', 'Tiruvallur-HQ', 'Ellapuram', 'Gummidipoondi', 'Kadambathur', 'Minjur', 'Pallipattu', 'Poonamallee', 'Poondi', 'Puzhal', 'R.K.Pet', 'Sholavaram', 'Tiruvalangadu', 'Tiruttani', 'Villivakkam'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                </select>
+                <select class="panchayatpicker" id="panchayat" name="panchayat" style="display: block; width: 100%" onclick="populateHabitation()" ></select>
+                <select class="habitationpicker" id="habitation" name="habitation" style="display: block; width: 100%"onclick="populateOverseer()" ></select>
+                <select class="overseerpicker" id="overseer" name="overseer" style="display: block; width: 100%"></select>
+                <input type="number" id="plotNo" name="plotNo">
+                <input type="number" id="hectre" name="hectre">
+                <input type="text" id="workName" name="workName">
+                <input type="number" id="totalPits" name="totalPits">
+                <input type="number" id="costOfCrops" name="costOfCrops">
+                <input type="number" id="totalSanctionedPlants" name="totalSanctionedPlants">
+
+            </div>
+        </div>
+    <button type="submit" class="btn btn-success">Save Plantation Details</button>
+</div>
+</form>
+<script>
+     function populatePanchayat() {
+         var block = document.getElementById('Blocks').value;
+         var source = "/panchayats/"+block;
+           $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var arr = [];
+                for(var i = 0; i < json.length; i++) {
+                    if(arr.indexOf(json[i]['Panchayat']) === -1) {
+                        arr.push(json[i]['Panchayat']);
+                    }
+                }
+             var $schemename = $('.panchayatpicker');
+                var htmlEO = $.map(arr, function(lcn){
+                    return '<option value="' + lcn + '">' + lcn + '</option>'
+                });
+                $schemename.html(htmlEO);
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+function populateHabitation() {
+         var block = document.getElementById('Blocks').value;
+         var source = "/habitations/"+block;
+           $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var arr = [];
+                for(var i = 0; i < json.length; i++) {
+                    if(arr.indexOf(json[i]['Habitation Name']) === -1) {
+                        arr.push(json[i]['Habitation Name']);
+                    }
+                }
+             var $schemename = $('.habitationpicker');
+                var htmlEO = $.map(arr, function(lcn){
+                    return '<option value="' + lcn + '">' + lcn + '</option>'
+                });
+                $schemename.html(htmlEO);
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+    function populateOverseer() {
+         var block = document.getElementById('Blocks').value;
+         var source = "/overseers/"+block;
+           $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var arr = [];
+                for(var i = 0; i < json.length; i++) {
+                    if(arr.indexOf(json[i]['overseer']) === -1) {
+                        arr.push(json[i]['overseer']);
+                    }
+                }
+             var $schemename = $('.overseerpicker');
+                var htmlEO = $.map(arr, function(lcn){
+                    return '<option value="' + lcn + '">' + lcn + '</option>'
+                });
+                $schemename.html(htmlEO);
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends "post_login_blocks.html" %}
+{% block content %}
+<form id="new-intent" action="/updateplantation/{{ plantation_id }}" method="post" enctype="multipart/form-data">
+
+    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-around; margin-top: 10px">
+        <div>
+            <h3>Update Plantation Form</h3>
+        </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center">
+
+        <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+             <label style="flex: 4" for="typeOfPlantation">Type of Plantation</label>
+            <label style="flex: 4" for="typeOfCrop">Type of Sapling</label>
+            <label for="plotNo">Plot Number</label>
+            <label for="hectre">Hectre</label>
+            <label for="workName">Work Name</label>
+            <label for="totalPits">Total Pits</label>
+            <label for="Blocks">Block</label>
+            <label for="panchayat">Panchayat</label>
+            <label for="habitation">Habitations</label>
+            <label for="overseer">Overseer</label>
+            <label for="totalSanctionedPlants">Total Sanctioned Plants</label>
+            <label for="pitsTaken">Pits Taken</label>
+            <label for="survivalRateOfCrops">Survival Number</label>
+            <label style="flex: 4" for="costOfCrops">Estimate Cost</label>
+            <label style="flex: 4" for="plantationDate">Plantation Date</label>
+            <label style="flex: 4" for="plantationStatus">Plantation Status</label>
+
+        </div>
+
+        <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+             <select style="flex: 4" class="form-control" id="typeOfPlantation" name="typeOfPlantation" >
+                    {% set nature = ['Avenue Plantation', 'Mass Tree Plantation'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                </select>
+            <select style="flex: 4" class="form-control" id="typeOfCrop" name="typeOfCrop" >
+                    {% set nature = ['Neem', 'Nochi', 'Puliyan', 'Pungan', 'Vembu', 'Manjankondrai', 'Katuva', 'Teak', 'Kodukapuli', 'Poovarasan', 'Badam', 'Vengai', 'Athi'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                </select>
+            <input type="number" value="plotNo" id="plotNo" name="plotNo">
+            <input type="number" value="hectre" id="hectre" name="hectre">
+            <input type="text" value="workName" id="workName" name="workName">
+            <input type="number" value="totalPits" id="totalPits" name="totalPits">
+            <select style="flex: 4" class="form-control" id="Blocks" name="Blocks" onclick="populatePanchayat()">
+                    {% set nature = ['Tiruvallur', 'Tiruvallur-HQ', 'Ellapuram', 'Gummidipoondi', 'Kadambathur', 'Minjur', 'Pallipattu', 'Poonamallee', 'Poondi', 'Puzhal', 'R.K.Pet', 'Sholavaram', 'Tiruvalangadu', 'Tiruttani', 'Villivakkam'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+            </select>
+            <select class="panchayatpicker" id="panchayat" name="panchayat" style="display: block; width: 100%" onclick="populateHabitation()" ></select>
+            <select class="habitationpicker" id="habitation" name="habitation" style="display: block; width: 100%"onclick="populateOverseer()" ></select>
+            <select class="overseerpicker" id="overseer" name="overseer" style="display: block; width: 100%"></select>
+            <input type="number" id="totalSanctionedPlants" name="totalSanctionedPlants">
+            <input type="number" id="pitsTaken" name="pitsTaken">
+            <input type="number" id="survivalRateOfCrops" name="survivalRateOfCrops">
+            <input type="number" id="costOfCrops" name="costOfCrops" style="display: block; width: 100%">
+            <input type="date" value="plantationDate" id="plantationDate" name="plantationDate">
+            <select style="flex: 4" class="form-control" id="plantationStatus" name="plantationStatus" value="Open">
+                    {% set nature = ['Open', 'Close'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+            </select>
+            </div>
+    </div>
+
+        <div>
+        <label style="text-decoration: underline"> Upload Images  :-  </label>
+        <span> &nbsp </span>
+        <input type="file" id="field1" name="Image_upload" onchange="previewImages()"
+                   required multiple accept="image/jpg, image/jpeg"  >
+    </div>
+
+    <div>&nbsp
+    </div>
+    <label style="text-decoration: underline">Image Preview:-</label>
+    <div id="preview">
+    </div>
+
+     <button type="submit" class="btn btn-success">Save Plantation Details</button>
+
+    </div>
+    </div>
+</form>
+
+<script>
+function populatePanchayat() {
+         var block = document.getElementById('Blocks').value;
+         var source = "/panchayats/"+block;
+           $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var arr = [];
+                for(var i = 0; i < json.length; i++) {
+                    if(arr.indexOf(json[i]['Panchayat']) === -1) {
+                        arr.push(json[i]['Panchayat']);
+                    }
+                }
+             var $schemename = $('.panchayatpicker');
+                var htmlEO = $.map(arr, function(lcn){
+                    return '<option value="' + lcn + '">' + lcn + '</option>'
+                });
+                $schemename.html(htmlEO);
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+function populateHabitation() {
+         var block = document.getElementById('Blocks').value;
+         var source = "/habitations/"+block;
+           $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var arr = [];
+                for(var i = 0; i < json.length; i++) {
+                    if(arr.indexOf(json[i]['Habitation Name']) === -1) {
+                        arr.push(json[i]['Habitation Name']);
+                    }
+                }
+             var $schemename = $('.habitationpicker');
+                var htmlEO = $.map(arr, function(lcn){
+                    return '<option value="' + lcn + '">' + lcn + '</option>'
+                });
+                $schemename.html(htmlEO);
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+    function populateOverseer() {
+         var block = document.getElementById('Blocks').value;
+         var source = "/overseers/"+block;
+           $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var arr = [];
+                for(var i = 0; i < json.length; i++) {
+                    if(arr.indexOf(json[i]['overseer']) === -1) {
+                        arr.push(json[i]['overseer']);
+                    }
+                }
+             var $schemename = $('.overseerpicker');
+                var htmlEO = $.map(arr, function(lcn){
+                    return '<option value="' + lcn + '">' + lcn + '</option>'
+                });
+                $schemename.html(htmlEO);
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+    var source = "/raw_plantation/"+"{{plantation_id}}";
+    function previewImages() {
+  var $preview = $('#preview').empty();
+  if (this.files) $.each(this.files, readAndPreview);
+  function readAndPreview(i, file) {
+    if (!/\.(jpe?g|png|gif)$/i.test(file.name)){
+      return alert(file.name +" is not an image");
+    } // else...
+    var reader = new FileReader();
+    $(reader).on("load", function() {
+      $preview.append($("<img/>", {src:this.result, height:100}));
+    });
+    reader.readAsDataURL(file);
+  }
+}
+document.querySelector('#field1').addEventListener("change", previewImages, false);
+         $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+                console.log(json[0]["plantation_id"]);
+                document.getElementById("typeOfCrop").value = json[0]["typeOfPlantation"];
+                document.getElementById("typeOfCrop").value = json[0]["typeOfCrop"];
+                document.getElementById("plotNo").value = json[0]["plotNo"];
+                document.getElementById("hectre").value = json[0]["hectre"];
+                document.getElementById("workName").value = json[0]["workName"];
+                document.getElementById("totalPits").value = json[0]["totalPits"];
+                document.getElementById("Blocks").value = json[0]["block"];
+                document.getElementById("totalSanctionedPlants").value = json[0]["totalSanctionedPlants"];
+                document.getElementById("pitsTaken").value = json[0]["pitsTaken"];
+                document.getElementById("survivalRateOfCrops").value = json[0]["survivalRateOfCrops"];
+                document.getElementById("costOfCrops").value = json[0]["costOfCrops"];
+                document.getElementById("plantationStatus").value = json[0]["plantationStatus"];
+                document.getElementById("plantationDate").value = moment(json[0]["plantationDate"]['$date']).format('YYYY-MM-DD');
+
+        },
+            error: function (e) {
+                alert("error");
+            }
+        });
+</script>
+
+{% endblock %}
+
+
+
+
+

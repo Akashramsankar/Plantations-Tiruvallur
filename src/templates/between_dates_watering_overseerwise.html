@@ -1,0 +1,61 @@
+{% extends "post_login_HQ.html" %}
+{% block content %}
+<div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;">
+    <form id="getByDate" action="/Overseer_summary_watering" method="post">
+        <div>
+            Enter Dates Below to get Overseer Summary
+        </div>
+        <div>
+            <label for="startdate">Start Date</label>
+            <input type="date" id="startdate" name="startdate">
+        </div>
+        <div>
+            <label for="enddate">End Date</label>
+            <input type="date" id="enddate" name="enddate">
+        </div>
+         <div class="form-group" style="display: block; width: 38%">
+            <label for="block">Blocks</label>
+            <select style="flex: 4" class="form-control" id="block" name="block" onclick="populateOverseer()">
+                    {% set nature = ['Tiruvallur', 'Tiruvallur-HQ', 'Ellapuram', 'Gummidipoondi', 'Kadambathur', 'Minjur', 'Pallipattu', 'Poonamallee', 'Poondi', 'Puzhal', 'R.K.Pet', 'Sholavaram', 'Tiruvalangadu', 'Tiruttani', 'Villivakkam'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                </select>
+        </div>
+        <div>
+            <label for="overseer">Overseer</label>
+            <select class="overseerpicker" id="overseer" name="overseer" style="display: block; width: 100%"></select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Overseer Summary</button>
+    </form>
+</div>
+<script>
+function populateOverseer() {
+         var block = document.getElementById('block').value;
+         var source = "/overseers/"+block;
+           $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var arr = [];
+                for(var i = 0; i < json.length; i++) {
+                    if(arr.indexOf(json[i]['overseer']) === -1) {
+                        arr.push(json[i]['overseer']);
+                    }
+                }
+             var $schemename = $('.overseerpicker');
+                var htmlEO = $.map(arr, function(lcn){
+                    return '<option value="' + lcn + '">' + lcn + '</option>'
+                });
+                $schemename.html(htmlEO);
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+    </script>
+{% endblock %}

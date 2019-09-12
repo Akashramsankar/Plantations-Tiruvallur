@@ -1,0 +1,159 @@
+{% extends "post_login_HQ.html" %}
+{% block content %}
+<body>
+ <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center; margin-top: 10px">
+
+    <button onclick="downloadSummaryOverseerReport()">Overseer Summary Report</button>
+ </div>
+</body>
+<div id="blockList" style="display:none">
+        </div>
+<script>
+
+         var start_date = "{{start_date}}";
+        var end_date = "{{end_date}}";
+        var overseer = "{{overseer}}";
+        var source = "/OverseerReport/"+start_date+"/"+end_date+"/"+overseer;
+           $.ajax({
+                type: 'GET',
+                url: source,
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (json) {
+
+                    var aggregatedData = d3.nest()
+                    .key(function (d) {
+                        return d.panchayat;
+
+                    })
+                    .key(function (d) {
+                        return d.typeOfCrop;
+
+                    })
+
+                    .rollup(function (leaves) {
+                        return {
+                            "total_totalSanctionedPlants":d3.sum(leaves, function (d) {return d.totalSanctionedPlants;}),
+                            "total_totalPits": d3.sum(leaves, function (d) {return d.totalPits;}),
+                            "total_pitsTaken": d3.sum(leaves, function (d) {return d.pitsTaken;}),
+                             "completed_plantation": leaves.filter(function (leaves){return leaves.plantationStatus === "Close"}).length
+                        }
+                    })
+                    .entries(json);
+                 console.log(aggregatedData)
+                 var tbl3 = $("<table class='table table-bordered table-dark' id='blockDetails'/>");
+                $("#blockList").append(tbl3);
+                var hr13 = "<tr>";
+                var th13 = "<th style='text-align:center;vertical-align:middle'>" + "S. No" + "</th>";
+                var th23 = "<th style='text-align:center;vertical-align:middle'>" + "Panchayat" + "</th>";
+                var th33 = "<th style='text-align:center;vertical-align:middle'>" + "Type of Sapling" + "</th>";
+                var th43 = "<th style='text-align:center;vertical-align:middle'>" + "Total Sanctioned Plants" + "</th>";
+                var th53 = "<th style='text-align:center;vertical-align:middle'>" + "Total Pits" + "</th>";
+                var th63 = "<th style='text-align:center;vertical-align:middle'>" + "Pits Taken" + "</th>";
+                var th73 = "<th style='text-align:center;vertical-align:middle'>" + "To Be Taken" + "</th>";
+                var th83 = "<th style='text-align:center;vertical-align:middle'>" + "Completed Plantations " + "</th>";
+                $("#blockDetails").append(hr13 + th13 + th23 + th33 + th43 + th53 + th63 + th73 + th83);
+
+                for (var l = 0; l < aggregatedData.length; l++){
+                 for (var j = 0; j < aggregatedData[l].values.length; j++) {
+                         console.log(aggregatedData);
+                         var Sno = (l+1)
+                         console.log(Sno)
+                         var panchayat =  aggregatedData[l].key
+                         console.log(panchayat)
+                     var row = $('<tr></tr>').html(
+                         '<td>'+ Sno + '</td>' +
+                         '<td>' + aggregatedData[l].key + '</td>'+
+                         '<td>' + aggregatedData[l].values[j].key + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.total_totalSanctionedPlants  + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.total_totalPits   + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.total_pitsTaken   + '</td>' +
+                         '<td>' + [(aggregatedData[l].values[j].values.total_totalPits) - (aggregatedData[l].values[j].values.total_pitsTaken)] + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.completed_plantation   + '</td>');
+                     $("#blockDetails").append(row);
+                 }
+                }
+            },
+             error: function (e) {
+                alert("error");
+                }
+        });
+        function downloadSummaryOverseerReport() {
+        var start_date = "{{start_date}}";
+        var end_date = "{{end_date}}";
+        var overseer = "{{overseer}}";
+        var source = "/OverseerReport/"+start_date+"/"+end_date+"/"+overseer;
+         $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var aggregatedData = d3.nest()
+                    .key(function (d) {
+                        return d.panchayat;
+
+                    })
+                    .key(function (d) {
+                        return d.typeOfCrop;
+
+                    })
+
+                    .rollup(function (leaves) {
+                        return {
+                            "total_totalSanctionedPlants":d3.sum(leaves, function (d) {return d.totalSanctionedPlants;}),
+                            "total_totalPits": d3.sum(leaves, function (d) {return d.totalPits;}),
+                            "total_pitsTaken": d3.sum(leaves, function (d) {return d.pitsTaken;}),
+                             "completed_plantation": leaves.filter(function (leaves){return leaves.plantationStatus === "Close"}).length
+                        }
+                    })
+                    .entries(json);
+                 console.log(aggregatedData)
+                var doc = new jsPDF();
+                doc.setFontSize(16);
+                var heading = doc.splitTextToSize('DISTRICT RURAL DEVELOPMENT AUTHORITY ' +
+                    'TIRUVALLUR', 200);
+                doc.text(30, 20, heading);
+                var period = doc.splitTextToSize('Overseer Report ' + overseer+ '' + start_date + ' to ' + end_date, 140);
+                doc.text(40, 35, period);
+                var columns = ["S. No","Panchayat", "Type of Saplings","Total Sanctioned \n Plants", "Total \n Pits  ", "Pits Taken", "To Be \n Taken", "Completed \n Plantation"];
+                var rows = [];
+                for (var l = 0; l < aggregatedData.length; l++){
+                 for (var j = 0; j < aggregatedData[l].values.length; j++) {
+                    rows.push([[l + 1],
+                        [aggregatedData[l].key],
+                        [[aggregatedData[l].values[j].key]],
+                        [[aggregatedData[l].values[j].values['total_totalSanctionedPlants']]],
+                        [[aggregatedData[l].values[j].values['total_totalPits']]],
+                        [[aggregatedData[l].values[j].values['total_pitsTaken']]],
+                        [[[aggregatedData[l].values[j].values['total_totalPits']]]-[[aggregatedData[l].values[j].values['total_pitsTaken']]]],
+                        [[aggregatedData[l].values[j].values['completed_plantation']]]]);
+                 }
+                }
+                 doc.autoTable(columns, rows, {
+                        startY: 65
+                    });
+                var today = new Date();
+                var newdat = "Date Printed : "+ today;
+                doc.text(107,290,newdat);
+                doc.save('Overseer-Summary-Report.pdf')
+
+                 var wb = XLSX.utils.table_to_book(document.getElementById('blockDetails'), {sheet:"Overseer Report"});
+                var wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+                function s2ab(s) {
+                    var buf = new ArrayBuffer(s.length);
+                    var view = new Uint8Array(buf);
+                    for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+                    return buf;
+                }
+                saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'OverseerReport.xlsx');
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+{% endblock %}
+</script>

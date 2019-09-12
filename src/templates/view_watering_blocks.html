@@ -1,0 +1,84 @@
+{% extends "post_login_blocks.html" %}
+{% block content %}
+
+
+    <div id="input">
+
+         <label style="flex: 4" for="Search">Search by Type Of Crop</label>
+        <input id="Search" type="text" onkeyup="myFunction()" name="Search" style="display: block; width: 100%">
+    </div>
+    <div id="WateringList">
+    </div>
+<script>
+    var source = "/Wateringsbyplantation/{{plantation_id}}"
+     $.ajax({
+          type: 'GET',
+          url: source,
+          contentType: "application/json",
+          dataType: 'json',
+          success: function (json) {
+              {
+                  console.log(json);
+                  $("#WateringDetails").find("tbody").empty();
+                  var tbl = $("<table class='table table-bordered table-dark' id='WateringDetails'/>");
+                  $("#WateringList").append(tbl);
+                  var hr = "<tr>";
+                  var th1 = "<th style='text-align:center;vertical-align:middle'>" + "AS Date" + "</th>";
+                  var th2 = "<th style='text-align:center;vertical-align:middle'>" + "Type Of Crop" + "</th>";
+                  var th3 = "<th style='text-align:center;vertical-align:middle'>" + "Plot Number" + "</th>";
+                  var th5 = "<th style='text-align:center;vertical-align:middle'>" + "Original Count Of Crops" + "</th>";
+                  var th6 = "<th style='text-align:center;vertical-align:middle'>" + "Current Count Of Crops" + "</th>";
+                  var th7 = "<th style='text-align:center;vertical-align:middle'>" + "Number Of Replaced Crops" + "</th>";
+                  var th8 = "<th style='text-align:center;vertical-align:middle'>" + "Estimate Cost Of Watering" + "</th>";
+                  var th9 = "<th style='text-align:center;vertical-align:middle'>" + "Number Of Man Days" + "</th>";
+                  var th10 = "<th style='text-align:center;vertical-align:middle'>" + "Number Of Workers" + "</th>";
+                  var th11= "<th style='text-align:center;vertical-align:middle'>" + "Update" + "</th>";
+                  var th12 = "<th style='text-align:center;vertical-align:middle'>" + "Delete" + "</th>";
+                  $("#WateringDetails").append(hr + th1 + th2 + th3 + th5 + th6 + th7 + th8 + th9 + th10 + th11 + th12);
+                   for (var j = 0; j < json.length; j++) {
+                      {
+                          var url = '/updatewatering/' + json[j]['_id'];
+                          var url2 =  '/deletewatering/' + json[j]['_id'];
+                          var row = $('<tr></tr>').html('<td>' +
+                               moment(json[j]["asDate"]['$date']).format('YYYY-MM-DD') + '</td>' +
+                              '<td>' + json[j]["typeOfCrop"] + '</td>' +
+                              '<td>' + json[j]["plotNo"] + '</td>' +
+                              '<td>' + json[j]["originalCountOfCrops"] + '</td>' +
+                              '<td>' + json[j]["currentCountOfCrops"] + '</td>' +
+                              '<td>' + json[j]["numberOfReplacedCrops"] + '</td>' +
+                              '<td>' + json[j]["estimateCostOfWatering"] + '</td>' +
+                              '<td>' + json[j]["numberOfManDays"] + '</td>' +
+                              '<td>' + json[j]["numberOfPeople"] + '</td>' +
+                              '<td><button><a href="' + url + '">Update Watering</a></button></td>' +
+                              '<td><button><a href="' + url2 + '">Delete Watering</a></button></td>');
+                          $("#WateringDetails").append(row);
+                      }
+                  }
+              }
+          },
+          error: function (e) {
+              alert("error");
+          }
+      });
+      function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("Search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("WateringList");
+          tr = table.getElementsByTagName("tr");
+          console.log(tr.length);
+          for (i = 0; i < tr.length; i++) {
+              td = tr[i].getElementsByTagName("td")[1];
+              if (td) {
+                  if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                      tr[i].style.display = "";
+                  } else {
+                      tr[i].style.display = "none";
+                  }
+              }
+          }
+  }
+</script>
+{% endblock %}
+
+

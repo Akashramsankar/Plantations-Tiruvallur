@@ -1,0 +1,153 @@
+{% extends "post_login_HQ.html" %}
+{% block content %}
+<body>
+ <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center; margin-top: 10px">
+
+    <button onclick="downloadSummaryOverseerReport()">Overseer Summary Report</button>
+ </div>
+<div id="blockList" style="display:none">
+        </div>
+</body>
+<script>
+
+         var start_date = "{{start_date}}";
+        var end_date = "{{end_date}}";
+        var overseer = "{{overseer}}";
+        var source = "/OverseerReportWatering/"+start_date+"/"+end_date+"/"+overseer;
+         $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var aggregatedData = d3.nest()
+                    .key(function (d) {
+                        return d.panchayat;
+
+                    })
+                    .key(function (d) {
+                        return d.typeOfCrop;
+
+                    })
+
+                    .rollup(function (leaves) {
+                        return {
+                           "total_originalCountOfCrops": d3.sum(leaves, function (d) {return d.originalCountOfCrops;}),
+                            "total_currentCountOfCrops": d3.sum(leaves, function (d) {return d.currentCountOfCrops;}),
+                            "total_numberOfManDays": d3.sum(leaves, function (d) {return d.numberOfManDays;}),
+                            "total_numberOfPeople": d3.sum(leaves, function (d) {return d.numberOfPeople;}),
+                        }
+                    })
+                    .entries(json);
+                 console.log(aggregatedData)
+                 var tbl3 = $("<table class='table table-bordered table-dark' id='blockDetails'/>");
+                $("#blockList").append(tbl3);
+                var hr13 = "<tr>";
+                var th13 = "<th style='text-align:center;vertical-align:middle'>" + "S. No" + "</th>";
+                var th23 = "<th style='text-align:center;vertical-align:middle'>" + "Panchayat" + "</th>";
+                var th33 = "<th style='text-align:center;vertical-align:middle'>" + "Type of Sapling" + "</th>";
+                var th43 = "<th style='text-align:center;vertical-align:middle'>" + "Total Original Count-Saplings" + "</th>";
+                var th53 = "<th style='text-align:center;vertical-align:middle'>" + "Total Current Count-Saplings" + "</th>";
+                var th63 = "<th style='text-align:center;vertical-align:middle'>" + "Total Man Days" + "</th>";
+                var th73 = "<th style='text-align:center;vertical-align:middle'>" + "Total Workers" + "</th>";
+                $("#blockDetails").append(hr13 + th13 + th23 + th33 + th43 + th53 + th63 + th73);
+
+                for (var l = 0; l < aggregatedData.length; l++){
+                 for (var j = 0; j < aggregatedData[l].values.length; j++) {
+                         console.log(aggregatedData);
+                         var Sno = (l+1)
+                         console.log(Sno)
+                         var panchayat =  aggregatedData[l].key
+                         console.log(panchayat)
+                     var row = $('<tr></tr>').html(
+                         '<td>'+ Sno + '</td>' +
+                         '<td>' + aggregatedData[l].key + '</td>'+
+                         '<td>' + aggregatedData[l].values[j].key + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.total_originalCountOfCrops  + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.total_currentCountOfCrops   + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.total_numberOfManDays   + '</td>' +
+                         '<td>' + aggregatedData[l].values[j].values.total_numberOfPeople+ '</td>');
+                     $("#blockDetails").append(row);
+                 }
+                }
+            },
+             error: function (e) {
+                alert("error");
+                }
+        });
+        function downloadSummaryOverseerReport() {
+        var start_date = "{{start_date}}";
+        var end_date = "{{end_date}}";
+        var overseer = "{{overseer}}";
+        var source = "/OverseerReportWatering/"+start_date+"/"+end_date+"/"+overseer;
+         $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                var aggregatedData = d3.nest()
+                    .key(function (d) {
+                        return d.panchayat;
+
+                    })
+                    .key(function (d) {
+                        return d.typeOfCrop;
+
+                    })
+
+                    .rollup(function (leaves) {
+                        return {
+                           "total_originalCountOfCrops": d3.sum(leaves, function (d) {return d.originalCountOfCrops;}),
+                            "total_currentCountOfCrops": d3.sum(leaves, function (d) {return d.currentCountOfCrops;}),
+                            "total_numberOfManDays": d3.sum(leaves, function (d) {return d.numberOfManDays;}),
+                            "total_numberOfPeople": d3.sum(leaves, function (d) {return d.numberOfPeople;}),
+                        }
+                    })
+                    .entries(json);
+                 console.log(aggregatedData)
+                var doc = new jsPDF();
+                doc.setFontSize(16);
+                var heading = doc.splitTextToSize('DISTRICT RURAL DEVELOPMENT AUTHORITY ' +
+                    'TIRUVALLUR', 200);
+                doc.text(30, 20, heading);
+                var period = doc.splitTextToSize('Overseer Watering Report ' + overseer + '' + start_date + ' to ' + end_date, 140);
+                doc.text(40, 35, period);
+                var columns = ["S. No","Panchayat", "Type of Saplings","Total Original \n Count-Crops", "Total Current \n Count-Crops", "Total Man \n Days", "Total \n Workers"  ];
+                var rows = [];
+                for (var l = 0; l < aggregatedData.length; l++){
+                 for (var j = 0; j < aggregatedData[l].values.length; j++) {
+                    rows.push([[l + 1],
+                        [aggregatedData[l].key],
+                        [[aggregatedData[l].values[j].key]],
+                        [[aggregatedData[l].values[j].values['total_originalCountOfCrops']]],
+                        [[aggregatedData[l].values[j].values['total_currentCountOfCrops']]],
+                        [[aggregatedData[l].values[j].values['total_numberOfManDays']]],
+                        [[aggregatedData[l].values[j].values['total_numberOfPeople']]]]);
+                 }
+                }
+                 doc.autoTable(columns, rows, {
+                        startY: 65
+                    });
+                var today = new Date();
+                var newdat = "Date Printed : "+ today;
+                doc.text(107,290,newdat);
+                doc.save('Overseer-Summary-Report-Watering.pdf')
+                var wb = XLSX.utils.table_to_book(document.getElementById('blockDetails'), {sheet:"Overseer Report"});
+                var wbout = XLSX.write(wb, {bookType:'xlsx', bookSST:true, type: 'binary'});
+                function s2ab(s) {
+                    var buf = new ArrayBuffer(s.length);
+                    var view = new Uint8Array(buf);
+                    for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF;
+                    return buf;
+                }
+                saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'OverseerWateringReport.xlsx');
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+    }
+    </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+{% endblock %}

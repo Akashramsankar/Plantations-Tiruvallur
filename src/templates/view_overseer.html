@@ -1,0 +1,65 @@
+{% extends "post_login_HQ.html" %}
+{% block content %}
+    <div id="input">
+         <label style="flex: 4" for="Search">Search by Block</label>
+        <input id="Search" type="text" onkeyup="myFunction()" name="Search" style="display: block; width: 100%">
+    </div>
+    <div id="OverseerList">
+    </div>
+<script>
+      var source = "/ViewAllOverseers"
+      $.ajax({
+          type: 'GET',
+          url: source,
+          contentType: "application/json",
+          dataType: 'json',
+          success: function (json) {
+              {
+                  console.log(json);
+                  $("#OverseerDetails").find("tbody").empty();
+                  var tbl = $("<table class='table table-bordered table-dark' id='OverseerDetails'/>");
+                  $("#OverseerList").append(tbl);
+                  var hr = "<tr>";
+                  var th1 = "<th style='text-align:center;vertical-align:middle'>" + "Block" + "</th>";
+                  var th2 = "<th style='text-align:center;vertical-align:middle'>" + "Overseer" + "</th>";
+                  var th3 = "<th style='text-align:center;vertical-align:middle'>" + "Update Overseer" + "</th>";
+                  var th4 = "<th style='text-align:center;vertical-align:middle'>" + "Delete Overseer" + "</th>";
+                  $("#OverseerDetails").append(hr + th1 + th2 + th3 + th4);
+                  for (var j = 0; j < json.length; j++) {
+                      {
+                          var url = '/updateoverseer/' + json[j]['_id'];
+                          var url1 = '/delete_overseer/' + json[j]['_id'];
+                          var row = $('<tr></tr>').html(
+                              '<td>'+  json[j]["block"] + '</td>' +
+                              '<td>' + json[j]["overseer"] + '</td>' +
+                              '<td><button><a href="' + url + '">Update Overseer</a></button></td>'+
+                              '<td><button><a href="' + url1 + '">Delete Overseer</a></button></td>');
+                          $("#OverseerDetails").append(row);
+                      }
+                  }
+              }
+          },
+          error: function (e) {
+              alert("error");
+          }
+      });
+      function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("Search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("OverseerList");
+          tr = table.getElementsByTagName("tr");
+          console.log(tr.length);
+          for (i = 0; i < tr.length; i++) {
+              td = tr[i].getElementsByTagName("td")[0];
+              if (td) {
+                  if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                      tr[i].style.display = "";
+                  } else {
+                      tr[i].style.display = "none";
+                  }
+              }
+          }
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+{% extends "post_login_HQ.html" %}
+
+{% block content %}
+
+<form id="new-intent" action="/updateoverseer/{{ _id }}" method="post">
+
+    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-around; margin-top: 10px">
+        <div>
+            <h3>Update Overseer Form</h3>
+        </div>
+
+    <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center">
+
+        <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+            <label style="flex: 4" for="Blocks">Block</label>
+            <label style="flex: 4" for="overseer">Overseer</label>
+        </div>
+
+        <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+            <select style="flex: 4" class="form-control" id="Blocks" name="Blocks">
+                    {% set nature = ['Tiruvallur', 'Tiruvallur-HQ', 'Ellapuram', 'Gummidipoondi', 'Kadambathur', 'Minjur', 'Pallipattu', 'Poonamallee', 'Poondi', 'Puzhal', 'R.K.Pet', 'Sholavaram', 'Tiruvalangadu', 'Tiruttani', 'Villivakkam'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                    </select>
+                    <input type="text"  id="overseer" name="overseer">
+        </div>
+    </div>
+    <button type="submit" class="btn btn-success">Save Overseer Details</button>
+    </div>
+</form>
+<script>
+    var source = "/raw_overseer/"+"{{_id}}";
+            $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+                document.getElementById("Blocks").value = json[0]["block"];
+                document.getElementById("overseer").value = json[0]["overseer"];
+            },
+            error: function (e) {
+                alert("error");
+            }
+        });
+</script>
+{% endblock %}

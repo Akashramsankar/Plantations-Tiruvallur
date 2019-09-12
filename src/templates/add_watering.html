@@ -1,0 +1,41 @@
+{% extends "post_login_HQ.html" %}
+
+{% block content %}
+
+
+
+<form id="new-intent" action="/addwatering/{{ plantation_id }}" method="post">
+<div style="display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-around; margin-top: 10px">
+        <div>
+            <h3>Add Watering Form</h3>
+        </div>
+     <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center">
+        <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <label for="asDate">AS Date</label>
+
+                <label for="originalCountOfCrops">Original Count Of Crops</label>
+                <label for="currentCountOfCrops">Current Count Of Crops</label>
+                <label for="numberOfManDays">Number Of Man Days</label>
+                <label for="numberOfPeople">Number Of Workers</label>
+        </div>
+         <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <input type="date" value="asDate" id="asDate" name="asDate">
+
+                <input type="number" id="originalCountOfCrops" name="originalCountOfCrops">
+                <input type="number" id="currentCountOfCrops" name="currentCountOfCrops">
+                <input type="number" id="numberOfManDays" name="numberOfManDays">
+                <input type="number" id="numberOfPeople" name="numberOfPeople">
+            </div>
+        </div>
+
+
+    <button type="submit" class="btn btn-success">Save Watering Details</button>
+
+
+
+</div>
+
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "post_login_HQ.html" %}
+{% block content %}
+<form id="new-intent" action="/updatewatering/{{ _id }}" method="post" enctype="multipart/form-data">
+    <div style="display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-around; margin-top: 10px">
+        <div>
+            <h3>Update Watering Form</h3>
+        </div>
+        <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center">
+
+        <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+            <label style="flex: 4" for="asDate">AS Date</label>
+            <label for="originalCountOfCrops">Original Count Of Crops</label>
+            <label for="currentCountOfCrops">Current Count Of Crops</label>
+            <label style="flex: 4" for="numberOfManDays">Number Of Man Days</label>
+            <label style="flex: 4" for="numberOfPeople">Number Of Workers</label>
+        </div>
+        <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <input type="date" value="asDate" id="asDate" name="asDate">
+
+                <input type="number" id="originalCountOfCrops" name="originalCountOfCrops">
+                <input type="number" id="currentCountOfCrops" name="currentCountOfCrops">
+                <input type="number" id="numberOfManDays" name="numberOfManDays">
+                <input type="number" id="numberOfPeople" name="numberOfPeople">
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Update Watering Details</button>
+    </div>
+    </form>
+
+<script>
+
+    var source = "/raw_watering/"+"{{_id}}";
+     $.ajax({
+            type: 'GET',
+            url: source,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (json) {
+                console.log(json);
+                document.getElementById("asDate").value = moment(json[0]["asDate"]['$date']).format('YYYY-MM-DD');
+                document.getElementById("originalCountOfCrops").value = json[0]["originalCountOfCrops"];
+                document.getElementById("currentCountOfCrops").value = json[0]["currentCountOfCrops"];
+                document.getElementById("numberOfManDays").value = json[0]["numberOfManDays"];
+                document.getElementById("numberOfPeople").value = json[0]["numberOfPeople"];
+        },
+            error: function (e) {
+                alert("error");
+            }
+        });
+</script>
+{% endblock %}

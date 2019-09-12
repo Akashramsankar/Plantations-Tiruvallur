@@ -1,0 +1,141 @@
+{% extends "post_login_HQ.html" %}
+{% block content %}
+
+<body>
+
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: space-around;">
+        <div id="input">
+              <label style="flex: 4" for="Search">Search by Crop Type</label>
+              <input id="Search" type="text" onkeyup="myFunction()" name="Search" style="display: block; width: 100%">
+        </div>
+        </div>
+        <div id="PlantationList">
+        </div>
+
+</body>
+<script>
+      var source = "/ViewAllPlantations"
+      $.ajax({
+          type: 'GET',
+          url: source,
+          contentType: "application/json",
+          dataType: 'json',
+          success: function (json) {
+              {
+                  console.log(json);
+                  $("#PlantationDetails").find("tbody").empty();
+                  var tbl = $("<table class='table table-bordered table-dark' id='PlantationDetails'/>");
+                  $("#PlantationList").append(tbl);
+                  var hr = "<tr>";
+                  var th0 = "<th style='text-align:center;vertical-align:middle'>" + "Type of Plantation" + "</th>";
+                  var th1 = "<th style='text-align:center;vertical-align:middle'>" + "Type of Sapling" + "</th>";
+                  var th2 = "<th style='text-align:center;vertical-align:middle'>" + "Blocks" + "</th>";
+                  var th3 = "<th style='text-align:center;vertical-align:middle'>" + "Panchayat" + "</th>";
+                  var th4 = "<th style='text-align:center;vertical-align:middle'>" + "Habitation" + "</th>";
+                  var th5 = "<th style='text-align:center;vertical-align:middle'>" + "Overseer" + "</th>";
+                  var th6 = "<th style='text-align:center;vertical-align:middle'>" + "Plot Number" + "</th>";
+                  var th7 = "<th style='text-align:center;vertical-align:middle'>" + "Survival Number" + "</th>";
+                  var th8 = "<th style='text-align:center;vertical-align:middle'>" + "Estimate Cost" + "</th>";
+                  var th9 = "<th style='text-align:center;vertical-align:middle'>" + "Total Plants Sanctioned" + "</th>";
+                  var th10 = "<th style='text-align:center;vertical-align:middle'>" + "Work Name" + "</th>";
+                  var th11 = "<th style='text-align:center;vertical-align:middle'>" + "Hectre" + "</th>";
+                  var th12 = "<th style='text-align:center;vertical-align:middle'>" + "Total Pits" + "</th>";
+                  var th13 = "<th style='text-align:center;vertical-align:middle'>" + "Pits Taken" + "</th>";
+                  var th14 = "<th style='text-align:center;vertical-align:middle'>" + "Pits to be Taken" + "</th>";
+                  var th15 = "<th style='text-align:center;vertical-align:middle'>" + "Plantation Date" + "</th>";
+                  var th16 = "<th style='text-align:center;vertical-align:middle'>" + "Update Plantation" + "</th>";
+                  var th17= "<th style='text-align:center;vertical-align:middle'>" + "Add Watering" + "</th>";
+                  var th18= "<th style='text-align:center;vertical-align:middle'>" + "View Watering" + "</th>";
+                  var th19 = "<th style='text-align:center;vertical-align:middle'>" + "Delete Plantation" + "</th>";
+                  var th20 = "<th style='text-align:center;vertical-align:middle'>" + "View Image" + "</th>";
+                  $("#PlantationDetails").append(hr + th0 + th1 + th2 + th3 + th4 + th5+ th6 + th7 + th8 + th9 + th10 + th11 + th12+ th13 + th14 + th15 + th16 + th17+ th18+ th19+ th20);
+                  for (var j = 0; j < json.length; j++) {
+                               if ( json[j]['survivalRateOfCrops'] == null){
+                              var url = '/updateplantation/' + json[j]['plantation_id'];
+                              var url2 = '/addwatering/' + json[j]['plantation_id'];
+                              var url3 = '/viewwatering/' + json[j]['plantation_id'];
+                              var url4 = '/deleteplantation/' + json[j]['plantation_id'];
+                              var url5 = '/viewimageplantation/' + json[j]['plantation_id'];
+                              var row = $('<tr></tr>').html(
+                                  '<td>' + json[j]["typeOfPlantation"] + '</td>' +
+                                  '<td>' + json[j]["typeOfCrop"] + '</td>' +
+                                  '<td>' + json[j]["block"] + '</td>' +
+                                  '<td>' + json[j]["panchayat"] + '</td>' +
+                                  '<td>' + json[j]["habitation"] + '</td>' +
+                                  '<td>' + json[j]["overseer"] + '</td>' +
+                                  '<td>' + json[j]["plotNo"] + '</td>' +
+                                  '<td>' + "Yet To Enter"+ '</td>' +
+                                  '<td>' + json[j]["costOfCrops"] + '</td>' +
+                                  '<td>' + json[j]["totalSanctionedPlants"] + '</td>' +
+                                  '<td>' + json[j]["workName"] + '</td>' +
+                                  '<td>' + json[j]["hectre"] + '</td>' +
+                                  '<td>' + json[j]["totalPits"] + '</td>' +
+                                  '<td>' + "Yet To Enter" + '</td>' +
+                                  '<td>' + "Yet To Enter"+ '</td>' +
+                                  '<td>' + moment(json[j]["plantationDate"]['$date']).format('YYYY-MM-DD') + '</td>' +
+                                  '<td><button><a href="' + url + '">Update Plantation</a></button></td>' +
+                                  '<td><button><a href="' + url2 + '">Add Watering</a></button></td>' +
+                                  '<td><button><a href="' + url3 + '">View Watering</a></button></td>' +
+                                  '<td><button><a href="' + url4 + '">Delete Plantation</a></button></td>' +
+                                  '<td><button><a href="' + url5 + '">View Image</a></button></td>');
+                              $("#PlantationDetails").append(row);
+                          }
+                  else{
+                              var url = '/updateplantation/' + json[j]['plantation_id'];
+                              var url2 = '/addwatering/' + json[j]['plantation_id'];
+                              var url3 = '/viewwatering/' + json[j]['plantation_id'];
+                              var url4 = '/deleteplantation/' + json[j]['plantation_id'];
+                              var url5 = '/viewimageplantation/' + json[j]['plantation_id'];
+                              var row = $('<tr></tr>').html(
+                                  '<td>' + json[j]["typeOfPlantation"] + '</td>' +
+                                  '<td>' + json[j]["typeOfCrop"] + '</td>' +
+                                  '<td>' + json[j]["block"] + '</td>' +
+                                  '<td>' + json[j]["panchayat"] + '</td>' +
+                                  '<td>' + json[j]["habitation"] + '</td>' +
+                                  '<td>' + json[j]["overseer"] + '</td>' +
+                                  '<td>' + json[j]["plotNo"] + '</td>' +
+                                  '<td>' + json[j]["survivalRateOfCrops"]+ '</td>' +
+                                  '<td>' + json[j]["costOfCrops"] + '</td>' +
+                                  '<td>' + json[j]["totalSanctionedPlants"] + '</td>' +
+                                  '<td>' + json[j]["workName"] + '</td>' +
+                                  '<td>' + json[j]["hectre"] + '</td>' +
+                                  '<td>' + json[j]["totalPits"] + '</td>' +
+                                  '<td>' + json[j]["pitsTaken"] + '</td>' +
+                                  '<td>' + json[j]["pitsToBeTaken"] + '</td>' +
+                                  '<td>' + moment(json[j]["plantationDate"]['$date']).format('YYYY-MM-DD') + '</td>' +
+                                  '<td><button><a href="' + url + '">Update Plantation</a></button></td>' +
+                                  '<td><button><a href="' + url2 + '">Add Watering</a></button></td>' +
+                                  '<td><button><a href="' + url3 + '">View Watering</a></button></td>' +
+                                  '<td><button><a href="' + url4 + '">Delete Plantation</a></button></td>' +
+                                  '<td><button><a href="' + url5 + '">View Image</a></button></td>');
+                              $("#PlantationDetails").append(row);
+                               }
+                  }
+
+              }
+          },
+          error: function (e) {
+              alert("error");
+          }
+      });
+      function myFunction() {
+          var input, filter, table, tr, td, i;
+          input = document.getElementById("Search");
+          filter = input.value.toUpperCase();
+          table = document.getElementById("PlantationList");
+          tr = table.getElementsByTagName("tr");
+          console.log(tr.length);
+          for (i = 0; i < tr.length; i++) {
+              td = tr[i].getElementsByTagName("td")[0];
+              if (td) {
+                  if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                      tr[i].style.display = "";
+                  } else {
+                      tr[i].style.display = "none";
+                  }
+              }
+          }
+  }
+</script>
+{% endblock %}
+
