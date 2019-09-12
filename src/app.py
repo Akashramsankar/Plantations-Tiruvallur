@@ -197,9 +197,12 @@ def update_plantation(plantation_id):
                                           datetime.now().time())
             for file in request.files.getlist("Image_upload"):
              filename = file.filename
-             URI = "mongodb://127.0.0.1:27017"
+             # URI = "mongodb://127.0.0.1:27017"
+             # client = pymongo.MongoClient(URI)
+             # DATABASE = client['Tiruvallur']
+             URI = os.environ['MONGODB_URI']
              client = pymongo.MongoClient(URI)
-             DATABASE = client['Tiruvallur']
+             DATABASE = client['heroku_vcrk1vkq']
              fs = gridfs.GridFS(DATABASE)
              fileid = fs.put(file, filename=filename)
              DATABASE['road_images'].insert_one({"Image_upload": filename, "fileid": fileid, "plantation_id": plantation_id})
@@ -214,25 +217,25 @@ def update_plantation(plantation_id):
         return render_template('login_fail.html')
 @app.route('/viewimageplantation/<string:plantation_id>', methods=['POST', 'GET'])
 def preview_image(plantation_id):
-    #URI = os.environ['MONGODB_URI']
-    #client = pymongo.MongoClient(Database.URI)
-    #DATABASE = client['heroku_thg5d5x0']
     email = session['email']
     user = User.get_by_email(email)
-    URI = "mongodb://127.0.0.1:27017"
-    client = pymongo.MongoClient(URI)
-    DATABASE = client['Tiruvallur']
+    URI = os.environ['MONGODB_URI']
+    client = pymongo.MongoClient(Database.URI)
+    DATABASE = client['heroku_vcrk1vkq']
+    # URI = "mongodb://127.0.0.1:27017"
+    # client = pymongo.MongoClient(URI)
+    # DATABASE = client['Tiruvallur']
     fid = ""
     fs = gridfs.GridFS(DATABASE)
     for output_data1 in DATABASE['road_images'].find({'plantation_id': plantation_id}):
-        fid = output_data1["fileid"]
+            fid = output_data1["fileid"]
     output_data = fs.get(fid).read()
     base64_data = codecs.encode(output_data, 'base64')
     image = base64_data.decode('utf-8')
     if user.designation == 'HQ Staff':
-        return render_template('road_image_display.html', images=image, user=user)
+            return render_template('road_image_display.html', images=image, user=user)
     else:
-        return render_template('road_image_display_blocks.html', images=image, user=user)
+            return render_template('road_image_display_blocks.html', images=image, user=user)
 @app.route('/deleteplantation/<string:plantation_id>')
 def deleteplantation(plantation_id):
     email = session['email']
