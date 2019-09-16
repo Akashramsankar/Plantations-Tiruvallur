@@ -11,7 +11,7 @@
      <div id=" Plantationblocks">
             <label for="Blocks">Plantation Blocks</label>
             <select class="form-control" id="Blocks" name="Plantationblocks" onchange="populateInformation()">
-                {% set nature = ['Tiruvallur', 'Tiruvallur-HQ', 'Ellapuram', 'Gummidipoondi', 'Kadambathur', 'Minjur', 'Pallipattu', 'Poonamallee', 'Poondi', 'Puzhal', 'R.K.Pet', 'Sholavaram', 'Tiruvalangadu', 'Tiruttani', 'Villivakkam'] %}
+                {% set nature = ['Tiruvallur', 'Tiruvallur-HQ', 'Ellapuram', 'Gummidipoondi', 'Kadambathur', 'Minjur', 'Pallipet', 'Poonamallee', 'Poondi', 'Puzhal', 'R.K.Pet', 'Sholavaram', 'Tiruvalangadu', 'Tiruttani', 'Villivakkam'] %}
                 {% for nat in nature %}
                 <option value= "{{nat}}">{{nat}}</option>"
                 {% endfor %}
