@@ -33,7 +33,7 @@
           dataType: 'json',
           success: function (json) {
               {
-                    console.log(json);
+                      console.log(json);
                   $("#PlantationDetails").find("tbody").empty();
                   var tbl = $("<table class='table table-bordered table-dark' id='PlantationDetails'/>");
                   $("#PlantationList").append(tbl);
@@ -45,21 +45,23 @@
                   var th4 = "<th style='text-align:center;vertical-align:middle'>" + "Habitation" + "</th>";
                   var th5 = "<th style='text-align:center;vertical-align:middle'>" + "Overseer" + "</th>";
                   var th6 = "<th style='text-align:center;vertical-align:middle'>" + "Plot Number" + "</th>";
-                  var th7 = "<th style='text-align:center;vertical-align:middle'>" + "Survival Number" + "</th>";
-                  var th8 = "<th style='text-align:center;vertical-align:middle'>" + "Estimate Cost" + "</th>";
-                  var th9 = "<th style='text-align:center;vertical-align:middle'>" + "Total Plants Sanctioned" + "</th>";
-                  var th10 = "<th style='text-align:center;vertical-align:middle'>" + "Work Name" + "</th>";
-                  var th11 = "<th style='text-align:center;vertical-align:middle'>" + "Hectre" + "</th>";
-                  var th12 = "<th style='text-align:center;vertical-align:middle'>" + "Total Pits" + "</th>";
-                  var th13 = "<th style='text-align:center;vertical-align:middle'>" + "Pits Taken" + "</th>";
-                  var th14 = "<th style='text-align:center;vertical-align:middle'>" + "Pits to be Taken" + "</th>";
-                  var th15 = "<th style='text-align:center;vertical-align:middle'>" + "Plantation Date" + "</th>";
-                  var th16 = "<th style='text-align:center;vertical-align:middle'>" + "Update Plantation" + "</th>";
-                  var th17= "<th style='text-align:center;vertical-align:middle'>" + "Add Watering" + "</th>";
-                  var th18= "<th style='text-align:center;vertical-align:middle'>" + "View Watering" + "</th>";
-                  var th19 = "<th style='text-align:center;vertical-align:middle'>" + "Delete Plantation" + "</th>";
-                  var th20 = "<th style='text-align:center;vertical-align:middle'>" + "View Image" + "</th>";
-                  $("#PlantationDetails").append(hr + th0 + th1 + th2 + th3 + th4 + th5+ th6 + th7 + th8 + th9 + th10 + th11 + th12+ th13 + th14 + th15 + th16 + th17+ th18+ th19+ th20);
+                  var th7 = "<th style='text-align:center;vertical-align:middle'>" + "Type Of Road" + "</th>";
+                  var th8 = "<th style='text-align:center;vertical-align:middle'>" + "Kilometres" + "</th>";
+                  var th9 = "<th style='text-align:center;vertical-align:middle'>" + "Survival Number" + "</th>";
+                  var th10 = "<th style='text-align:center;vertical-align:middle'>" + "Estimate Cost" + "</th>";
+                  var th11 = "<th style='text-align:center;vertical-align:middle'>" + "Total Plants Sanctioned" + "</th>";
+                  var th12 = "<th style='text-align:center;vertical-align:middle'>" + "Work Name" + "</th>";
+                  var th13 = "<th style='text-align:center;vertical-align:middle'>" + "Hectre" + "</th>";
+                  var th14 = "<th style='text-align:center;vertical-align:middle'>" + "Total Pits" + "</th>";
+                  var th15 = "<th style='text-align:center;vertical-align:middle'>" + "Pits Taken" + "</th>";
+                  var th16 = "<th style='text-align:center;vertical-align:middle'>" + "Pits to be Taken" + "</th>";
+                  var th17 = "<th style='text-align:center;vertical-align:middle'>" + "Plantation Date" + "</th>";
+                  var th18 = "<th style='text-align:center;vertical-align:middle'>" + "Update Plantation" + "</th>";
+                  var th19= "<th style='text-align:center;vertical-align:middle'>" + "Add Watering" + "</th>";
+                  var th20= "<th style='text-align:center;vertical-align:middle'>" + "View Watering" + "</th>";
+                  var th21 = "<th style='text-align:center;vertical-align:middle'>" + "Delete Plantation" + "</th>";
+                  var th22 = "<th style='text-align:center;vertical-align:middle'>" + "View Image" + "</th>";
+                  $("#PlantationDetails").append(hr + th0 + th1 + th2 + th3 + th4 + th5+ th6 + th7 + th8 + th9 + th10 + th11 + th12+ th13 + th14 + th15 + th16 + th17+ th18+ th19+ th20 + th21 + th22);
                   for (var j = 0; j < json.length; j++) {
                                if ( json[j]['survivalRateOfCrops'] == null){
                               var url = '/updateplantation/' + json[j]['plantation_id'];
@@ -75,6 +77,8 @@
                                   '<td>' + json[j]["habitation"] + '</td>' +
                                   '<td>' + json[j]["overseer"] + '</td>' +
                                   '<td>' + json[j]["plotNo"] + '</td>' +
+                                  '<td>' + json[j]["typeOfRoad"] + '</td>' +
+                                  '<td>' + json[j]["KM"] + '</td>' +
                                   '<td>' + "Yet To Enter"+ '</td>' +
                                   '<td>' + json[j]["costOfCrops"] + '</td>' +
                                   '<td>' + json[j]["totalSanctionedPlants"] + '</td>' +
@@ -105,6 +109,8 @@
                                   '<td>' + json[j]["habitation"] + '</td>' +
                                   '<td>' + json[j]["overseer"] + '</td>' +
                                   '<td>' + json[j]["plotNo"] + '</td>' +
+                                  '<td>' + json[j]["typeOfRoad"] + '</td>' +
+                                  '<td>' + json[j]["KM"] + '</td>' +
                                   '<td>' + json[j]["survivalRateOfCrops"]+ '</td>' +
                                   '<td>' + json[j]["costOfCrops"] + '</td>' +
                                   '<td>' + json[j]["totalSanctionedPlants"] + '</td>' +
@@ -139,7 +145,7 @@
                 dataType: 'json',
                 success: function (json) {
                     {
-                       console.log(json);
+                        console.log(json);
                   $("#PlantationDetails").find("tbody").empty();
                   var tbl = $("<table class='table table-bordered table-dark' id='PlantationDetails'/>");
                   $("#PlantationList").append(tbl);
@@ -151,21 +157,23 @@
                   var th4 = "<th style='text-align:center;vertical-align:middle'>" + "Habitation" + "</th>";
                   var th5 = "<th style='text-align:center;vertical-align:middle'>" + "Overseer" + "</th>";
                   var th6 = "<th style='text-align:center;vertical-align:middle'>" + "Plot Number" + "</th>";
-                  var th7 = "<th style='text-align:center;vertical-align:middle'>" + "Survival Number" + "</th>";
-                  var th8 = "<th style='text-align:center;vertical-align:middle'>" + "Estimate Cost" + "</th>";
-                  var th9 = "<th style='text-align:center;vertical-align:middle'>" + "Total Plants Sanctioned" + "</th>";
-                  var th10 = "<th style='text-align:center;vertical-align:middle'>" + "Work Name" + "</th>";
-                  var th11 = "<th style='text-align:center;vertical-align:middle'>" + "Hectre" + "</th>";
-                  var th12 = "<th style='text-align:center;vertical-align:middle'>" + "Total Pits" + "</th>";
-                  var th13 = "<th style='text-align:center;vertical-align:middle'>" + "Pits Taken" + "</th>";
-                  var th14 = "<th style='text-align:center;vertical-align:middle'>" + "Pits to be Taken" + "</th>";
-                  var th15 = "<th style='text-align:center;vertical-align:middle'>" + "Plantation Date" + "</th>";
-                  var th16 = "<th style='text-align:center;vertical-align:middle'>" + "Update Plantation" + "</th>";
-                  var th17= "<th style='text-align:center;vertical-align:middle'>" + "Add Watering" + "</th>";
-                  var th18= "<th style='text-align:center;vertical-align:middle'>" + "View Watering" + "</th>";
-                  var th19 = "<th style='text-align:center;vertical-align:middle'>" + "Delete Plantation" + "</th>";
-                  var th20 = "<th style='text-align:center;vertical-align:middle'>" + "View Image" + "</th>";
-                  $("#PlantationDetails").append(hr + th0 + th1 + th2 + th3 + th4 + th5+ th6 + th7 + th8 + th9 + th10 + th11 + th12+ th13 + th14 + th15 + th16 + th17+ th18+ th19+ th20);
+                  var th7 = "<th style='text-align:center;vertical-align:middle'>" + "Type Of Road" + "</th>";
+                  var th8 = "<th style='text-align:center;vertical-align:middle'>" + "Kilometres" + "</th>";
+                  var th9 = "<th style='text-align:center;vertical-align:middle'>" + "Survival Number" + "</th>";
+                  var th10 = "<th style='text-align:center;vertical-align:middle'>" + "Estimate Cost" + "</th>";
+                  var th11 = "<th style='text-align:center;vertical-align:middle'>" + "Total Plants Sanctioned" + "</th>";
+                  var th12 = "<th style='text-align:center;vertical-align:middle'>" + "Work Name" + "</th>";
+                  var th13 = "<th style='text-align:center;vertical-align:middle'>" + "Hectre" + "</th>";
+                  var th14 = "<th style='text-align:center;vertical-align:middle'>" + "Total Pits" + "</th>";
+                  var th15 = "<th style='text-align:center;vertical-align:middle'>" + "Pits Taken" + "</th>";
+                  var th16 = "<th style='text-align:center;vertical-align:middle'>" + "Pits to be Taken" + "</th>";
+                  var th17 = "<th style='text-align:center;vertical-align:middle'>" + "Plantation Date" + "</th>";
+                  var th18 = "<th style='text-align:center;vertical-align:middle'>" + "Update Plantation" + "</th>";
+                  var th19= "<th style='text-align:center;vertical-align:middle'>" + "Add Watering" + "</th>";
+                  var th20= "<th style='text-align:center;vertical-align:middle'>" + "View Watering" + "</th>";
+                  var th21 = "<th style='text-align:center;vertical-align:middle'>" + "Delete Plantation" + "</th>";
+                  var th22 = "<th style='text-align:center;vertical-align:middle'>" + "View Image" + "</th>";
+                  $("#PlantationDetails").append(hr + th0 + th1 + th2 + th3 + th4 + th5+ th6 + th7 + th8 + th9 + th10 + th11 + th12+ th13 + th14 + th15 + th16 + th17+ th18+ th19+ th20 + th21 + th22);
                   for (var j = 0; j < json.length; j++) {
                                if ( json[j]['survivalRateOfCrops'] == null){
                               var url = '/updateplantation/' + json[j]['plantation_id'];
@@ -181,6 +189,8 @@
                                   '<td>' + json[j]["habitation"] + '</td>' +
                                   '<td>' + json[j]["overseer"] + '</td>' +
                                   '<td>' + json[j]["plotNo"] + '</td>' +
+                                  '<td>' + json[j]["typeOfRoad"] + '</td>' +
+                                  '<td>' + json[j]["KM"] + '</td>' +
                                   '<td>' + "Yet To Enter"+ '</td>' +
                                   '<td>' + json[j]["costOfCrops"] + '</td>' +
                                   '<td>' + json[j]["totalSanctionedPlants"] + '</td>' +
@@ -211,6 +221,8 @@
                                   '<td>' + json[j]["habitation"] + '</td>' +
                                   '<td>' + json[j]["overseer"] + '</td>' +
                                   '<td>' + json[j]["plotNo"] + '</td>' +
+                                  '<td>' + json[j]["typeOfRoad"] + '</td>' +
+                                  '<td>' + json[j]["KM"] + '</td>' +
                                   '<td>' + json[j]["survivalRateOfCrops"]+ '</td>' +
                                   '<td>' + json[j]["costOfCrops"] + '</td>' +
                                   '<td>' + json[j]["totalSanctionedPlants"] + '</td>' +

@@ -25,7 +25,7 @@ class Database(object):
     def find_one(collection, query):
         return Database.DATABASE[collection].find_one(query)
     @staticmethod
-    def Update_Plantation(collection, query,  block, typeOfPlantation, workName, typeOfCrop, totalPits, hectre, panchayat, overseer, habitation,totalSanctionedPlants, pitsTaken, pitsToBeTaken,plotNo,survivalRateOfCrops, user_name, user_id, costOfCrops, plantationDate, plantationStatus):
+    def Update_Plantation(collection, query,  block, typeOfPlantation, workName, typeOfCrop, totalPits, panchayat, overseer, habitation,totalSanctionedPlants, pitsTaken, pitsToBeTaken,survivalRateOfCrops, user_name, user_id, costOfCrops, plantationDate, plantationStatus, hectre = None, plotNo = None, typeOfRoad = None, KM = None):
 
         return Database.DATABASE[collection].update_one(query, {'$set': {
                                                                          'typeOfCrop': typeOfCrop,
@@ -35,6 +35,8 @@ class Database(object):
                                                                          'totalPits': totalPits,
                                                                          'workName': workName,
                                                                          'hectre':hectre,
+                                                                         'typeOfRoad':typeOfRoad,
+                                                                         'KM':KM,
                                                                          'panchayat':panchayat,
                                                                          'habitation': habitation,
                                                                          'overseer': overseer,

@@ -98,11 +98,14 @@ def plantation_form(user_id):
             panchayat = request.form['panchayat']
             habitation = request.form['habitation']
             overseer = request.form['overseer']
+            typeOfRoad = request.form['typeOfRoad']
+            KM = request.form['KM']
             user_id = user_id
             user_name = user.username
-            plantation = Plantation(typeOfPlantation=typeOfPlantation,typeOfCrop=typeOfCrop, hectre=hectre, workName=workName, totalPits=totalPits, block=block, plotNo=plotNo,
-                        costOfCrops=costOfCrops, plantationDate=plantationDate, totalSanctionedPlants=totalSanctionedPlants,
-                        user_id=user_id, user_name=user_name, panchayat=panchayat, habitation=habitation,overseer=overseer,plantationStatus="Open")
+            plantation = Plantation(typeOfPlantation=typeOfPlantation,typeOfCrop=typeOfCrop, hectre=hectre, typeOfRoad=typeOfRoad,
+                                    workName=workName, totalPits=totalPits, block=block, plotNo=plotNo, KM=KM,
+                                    costOfCrops=costOfCrops, plantationDate=plantationDate, totalSanctionedPlants=totalSanctionedPlants,
+                                    user_id=user_id, user_name=user_name, panchayat=panchayat, habitation=habitation,overseer=overseer,plantationStatus="Open")
             plantation.save_to_mongo()
             if user.designation == 'HQ Staff':
                 return render_template('application_added.html', plantation=plantation, user=user)
@@ -179,6 +182,8 @@ def update_plantation(plantation_id):
             block = request.form['Blocks']
             plotNo = request.form['plotNo']
             hectre = request.form['hectre']
+            typeOfRoad = request.form['typeOfRoad']
+            KM = request.form['KM']
             workName = request.form['workName']
             totalPits = request.form['totalPits']
             survivalRateOfCrops = request.form['survivalRateOfCrops']
@@ -206,7 +211,7 @@ def update_plantation(plantation_id):
              fs = gridfs.GridFS(DATABASE)
              fileid = fs.put(file, filename=filename)
              DATABASE['road_images'].insert_one({"Image_upload": filename, "fileid": fileid, "plantation_id": plantation_id})
-        Plantation.update_plantation(typeOfPlantation=typeOfPlantation,typeOfCrop=typeOfCrop, plotNo=plotNo, hectre=hectre, workName=workName,totalPits=totalPits, survivalRateOfCrops=survivalRateOfCrops, block = block,
+        Plantation.update_plantation(typeOfPlantation=typeOfPlantation,typeOfCrop=typeOfCrop, plotNo=plotNo, hectre=hectre, typeOfRoad=typeOfRoad, KM=KM, workName=workName,totalPits=totalPits, survivalRateOfCrops=survivalRateOfCrops, block = block,
         costOfCrops=costOfCrops, plantationDate=plantationDate, plantationStatus=plantationStatus, user_id=user_id, totalSanctionedPlants=totalSanctionedPlants, pitsTaken=pitsTaken, pitsToBeTaken=pitsToBeTaken,
         user_name=user_name, plantation_id=plantation_id, panchayat=panchayat, habitation=habitation, overseer=overseer)
         if user.designation == 'HQ Staff':

@@ -1,21 +1,14 @@
 {% extends "post_login_HQ.html" %}
-
 {% block content %}
-
 <form id="new-intent" action="/updateplantation/{{ plantation_id }}" method="post" enctype="multipart/form-data">
-
     <div style="display: flex; flex-direction: column; align-items: center; flex: 1; justify-content: space-around; margin-top: 10px">
         <div>
             <h3>Update Plantation Form</h3>
         </div>
-
     <div style="display: flex; flex-direction: row; justify-content: space-around; align-items: center">
-
         <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
              <label style="flex: 4" for="typeOfPlantation">Type of Plantation</label>
             <label style="flex: 4" for="typeOfCrop">Type of Sapling</label>
-            <label for="plotNo">Plot Number</label>
-            <label for="hectre">Hectre</label>
             <label for="workName">Work Name</label>
             <label for="totalPits">Total Pits</label>
             <label for="Blocks">Block</label>
@@ -32,7 +25,7 @@
         </div>
 
         <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
-             <select style="flex: 4" class="form-control" id="typeOfPlantation" name="typeOfPlantation" >
+             <select style="flex: 4" class="form-control" id="typeOfPlantation" name="typeOfPlantation" onmouseover="correctDisplay()" >
                     {% set nature = ['Avenue Plantation', 'Mass Tree Plantation'] %}
                     {% for nat in nature %}
                         <option value= "{{nat}}">{{nat}}</option>"
@@ -44,8 +37,6 @@
                         <option value= "{{nat}}">{{nat}}</option>"
                     {% endfor %}
                 </select>
-            <input type="number" value="plotNo" id="plotNo" name="plotNo">
-            <input type="number" value="hectre" id="hectre" name="hectre">
             <input type="text" value="workName" id="workName" name="workName">
             <input type="number" value="totalPits" id="totalPits" name="totalPits">
             <select style="flex: 4" class="form-control" id="Blocks" name="Blocks" onclick="populatePanchayat()">
@@ -70,6 +61,27 @@
             </select>
             </div>
     </div>
+        <div id = "Avenue"  style="display: flex; flex-direction: row; justify-content: space-around; align-items: center">
+             <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <label for="typeOfRoad">Type Of Road</label>
+                 <select style="flex: 4" class="form-control" id="typeOfRoad" name="typeOfRoad" >
+                    {% set nature = ['','PUR', 'VPR', 'PMGSY'] %}
+                    {% for nat in nature %}
+                        <option value= "{{nat}}">{{nat}}</option>"
+                    {% endfor %}
+                </select>
+                <label for="KM">Kilometres</label>
+                 <input type="number" id="KM" name="KM">
+             </div>
+</div>
+        <div id = "MassTree"  style="display: None; flex-direction: row; justify-content: space-around; align-items: center">
+             <div class="form-group" style="display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                <label for="plotNo">Plot Number</label>
+                 <input type="number" id="plotNo" name="plotNo">
+                <label for="hectre">Hectres</label>
+                 <input type="number" id="hectre" name="hectre">
+             </div>
+</div>
 
         <div>
         <label style="text-decoration: underline"> Upload Images  :-  </label>
@@ -91,6 +103,17 @@
 </form>
 
 <script>
+    function correctDisplay(){
+         var val = document.getElementById('typeOfPlantation').value;
+         if(val == 'Avenue Plantation'){
+             document.getElementById('Avenue').style.display = "flex";
+             document.getElementById('MassTree').style.display = "None";
+         }
+         else if(val == 'Mass Tree Plantation'){
+             document.getElementById('Avenue').style.display = "None";
+             document.getElementById('MassTree').style.display = "flex";
+         }
+     }
 function populatePanchayat() {
          var block = document.getElementById('Blocks').value;
          var source = "/panchayats/"+block;
@@ -193,10 +216,12 @@ document.querySelector('#field1').addEventListener("change", previewImages, fals
             success: function (json) {
                 console.log(json);
                 console.log(json[0]["plantation_id"]);
-                document.getElementById("typeOfCrop").value = json[0]["typeOfPlantation"];
+                document.getElementById("typeOfPlantation").value = json[0]["typeOfPlantation"];
                 document.getElementById("typeOfCrop").value = json[0]["typeOfCrop"];
                 document.getElementById("plotNo").value = json[0]["plotNo"];
                 document.getElementById("hectre").value = json[0]["hectre"];
+                document.getElementById("typeOfRoad").value = json[0]["typeOfRoad"];
+                document.getElementById("KM").value = json[0]["KM"];
                 document.getElementById("workName").value = json[0]["workName"];
                 document.getElementById("totalPits").value = json[0]["totalPits"];
                 document.getElementById("Blocks").value = json[0]["block"];
